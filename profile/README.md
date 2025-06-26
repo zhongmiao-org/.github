@@ -1,5 +1,7 @@
 # ZhongMiao Org | 众妙之门  
 
+English | [中文文档](https://github.com/zhongmiao-org/.github/blob/main/profile/README.zh-CN.md)
+
 > "The Gate of All Mysteries" — *Dao De Jing, Chapter 1*  
 
 ## 🌌 Why "ZhongMiao"?  
