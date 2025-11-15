@@ -1,20 +1,21 @@
 # ZhongMiao Org | 众妙之门
 
-[English](https://github.com/zhongmiao-org/.github/blob/main/profile/README.md) | 中文文档
+中文文档 | [English](README.md)
 
-> 「玄之又玄，众妙之门」 — *《道德经》第一章*
+> “众妙之门” ——《道德经·第一章》
 
-## 🌌 为何取名「众妙」？
-「众妙」源自《道德经》，形容万物奥妙的根源——**“一切玄妙变化的总门”**。
+## 为什么叫「众妙」？
+“众妙”来自《道德经》，意指万物之源、无限可能的起点。
 
-作为开源组织，我们践行这一理念：
-- **开放如门**：代码应如「道」，自由流通，生生不息。
-- **协作为术**：众人之力，化想法为惠及所有人的工具。
+作为一个开源组织，我们认同这样的理念：
+- 开放即入口：代码应当可访问、可复用、可生长。
+- 协作促炼金：一起把想法打磨成对所有人有用的工具。
 
-## 🛠️ 项目一览
-本组织下的仓库包含开源库、工具及实验性项目，欢迎探索。
+## 我们的项目
+浏览本组织下的开源库、工具与实验项目。
 
-## 🌊 参与其中
-- **贡献代码**：欢迎提交 Issue 或 PR！
-- **讨论交流**：在 [Discussions] 分享想法。
-- **传播开源**：Fork、Star，让知识流动。  
+## 加入我们
+- 讨论：在 [Discussions](https://github.com/zhongmiao-org/.github/discussions) 发起话题。
+- 传播：Fork、Star，让知识流动起来。
+
+想加入组织？通过 Issue 提交邀请申请（[点击加入我们](https://github.com/zhongmiao-org/.github/issues/new?assignees=&labels=github-invitation&template=invitation.yml&title=%E8%AF%B7%E9%82%80%E8%AF%B7%E6%88%91%E5%8A%A0%E5%85%A5%E7%BB%84%E7%BB%87)）。提交后，机器人会自动向你的 GitHub 账号发送邀请。
