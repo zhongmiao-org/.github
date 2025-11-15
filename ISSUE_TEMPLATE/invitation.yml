@@ -12,16 +12,18 @@ body:
   - type: input
     id: username
     attributes:
-      label: Your GitHub username (optional)
-      description: Leave empty to invite the issue author
+      label: Your GitHub username
+      description: Enter the GitHub username to invite
       placeholder: e.g. your-username
     validations:
-      required: false
+      required: true
   - type: textarea
     id: intro
     attributes:
-      label: Short introduction or motivation (optional)
+      label: Short introduction or motivation
       placeholder: Tell us a bit about yourself or what you’d like to work on.
+    validations:
+      required: true
   - type: checkboxes
     id: coc
     attributes:
