@@ -19,9 +19,16 @@ jobs:
           FALLBACK: ${{ github.event.issue.user.login }}
         run: |
           set -euo pipefail
-          # Try to extract an explicit username from the issue form input (if provided)
-          # This is a best-effort parse; if not found, fall back to issue author
-          username="$(printf '%s' "$BODY" | awk -F '|' '/你的 GitHub 用户名（可选）|Your GitHub username \(optional\)/ { val=$3; gsub(/^[ \t]+/, "", val); gsub(/[ \t]+$/, "", val); print val; exit }' || true)"
+          # Try to extract an explicit username from the issue form input (if provided).
+          # Current issue form renders something like:
+          #   Your GitHub username
+          #   fanfeng123
+          # We scan for the heading line and take the first non-empty line after it.
+          username="$(printf '%s\n' "$BODY" | awk '
+            BEGIN { found = 0 }
+            /Your GitHub username/ || /你的 GitHub 用户名/ { found = 1; next }
+            found && NF { gsub(/^[ \t]+/, \"\", $0); gsub(/[ \t]+$/, \"\", $0); print $0; exit }
+          ' || true)"
           if [ -z "$username" ]; then
             username="$FALLBACK"
           fi
@@ -54,7 +61,7 @@ jobs:
           set +e
           out=$(gh api -X PUT -H "Accept: application/vnd.github+json" \
                     "/orgs/$ORG/memberships/$USERNAME" \
-                    -f role=direct_member 2>&1)
+                    -f role=member 2>&1)
           code=$?
           set -e
           echo "$out"
@@ -82,7 +89,7 @@ jobs:
             const username = core.getInput('username', { required: false }) || process.env.USERNAME;
             const body = (() => {
               if (status === 'ok') {
-                return `✅ Invitation sent to @${username}. Please check your GitHub notifications or email.`;
+                return `✅ Invitation sent to @${username}. Please check your GitHub notifications or email, or visit https://github.com/settings/organizations to view and accept the invitation.`;
               }
               if (status === 'already') {
                 return `ℹ️ @${username} is already a member or has a pending invite.`;
