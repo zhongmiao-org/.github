@@ -40,7 +40,7 @@ jobs:
             exit 1
           fi
           echo "Inviting @$USERNAME to $ORG ..."
-          # Fetch user id
+          # Fetch user id (for validation only)
           uid=$(gh api -H "Accept: application/vnd.github+json" \
                     "/users/$USERNAME" --jq '.id' 2>/dev/null || true)
           if [ -z "$uid" ]; then
@@ -49,11 +49,11 @@ jobs:
             echo "resolved_message=无法解析该用户名或用户不存在" >> "$GITHUB_OUTPUT"
             exit 1
           fi
-          # Send organization invitation as direct member
+          # Create or update organization membership as direct member.
+          # This endpoint will send an invitation if the user is not yet a member.
           set +e
-          out=$(gh api -X POST -H "Accept: application/vnd.github+json" \
-                    "/orgs/$ORG/invitations" \
-                    -f invitee_id="$uid" \
+          out=$(gh api -X PUT -H "Accept: application/vnd.github+json" \
+                    "/orgs/$ORG/memberships/$USERNAME" \
                     -f role=direct_member 2>&1)
           code=$?
           set -e
