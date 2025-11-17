@@ -18,4 +18,4 @@
 - 讨论：在 [Discussions](https://github.com/zhongmiao-org/.github/discussions) 发起话题。
 - 传播：Fork、Star，让知识流动起来。
 
-想加入组织？通过 Issue 提交邀请申请（[点击加入我们](https://github.com/zhongmiao-org/.github/issues/new?assignees=&labels=github-invitation&template=invitation.yml&title=%E8%AF%B7%E9%82%80%E8%AF%B7%E6%88%91%E5%8A%A0%E5%85%A5%E7%BB%84%E7%BB%87)）。提交后，机器人会自动向你的 GitHub 账号发送邀请。
+想加入组织？请先用你希望加入组织的 GitHub 账号登录，然后通过 Issue 提交邀请申请（[点击加入我们](https://github.com/zhongmiao-org/.github/issues/new?assignees=&labels=github-invitation&template=invitation.yml&title=%E8%AF%B7%E9%82%80%E8%AF%B7%E6%88%91%E5%8A%A0%E5%85%A5%E7%BB%84%E7%BB%87)）。通过该链接创建的 Issue 会自动带上 `github-invitation` 标签，机器人会向创建 Issue 的账号发送邀请。

@@ -18,7 +18,7 @@ Explore the org to find open-source libraries, tools, and experiments.
 - Discuss: Start a thread in [Discussions](https://github.com/zhongmiao-org/.github/discussions).
 - Spread: Fork, star, and let knowledge flow.
 
-Want to join the organization? Submit an invitation issue via [join us](https://github.com/zhongmiao-org/.github/issues/new?assignees=&labels=github-invitation&template=invitation.yml&title=Please+invite+me+to+the+organization). After you submit, our bot will send an invite to your GitHub account.
+Want to join the organization? While signed in to the account you want to invite, submit an invitation issue via [join us](https://github.com/zhongmiao-org/.github/issues/new?assignees=&labels=github-invitation&template=invitation.yml&title=Please+invite+me+to+the+organization). Issues created from this link are labeled `github-invitation`, and our bot will send an invite to the account that opens the issue.
 
 
 <!--
