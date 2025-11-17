@@ -2,118 +2,18 @@ name: Invite user to organization
 
 on:
   issues:
-    types: [opened, labeled]
+    types: [labeled]
 
 jobs:
   invite:
-    if: |
-      contains(github.event.issue.labels.*.name, 'github-invitation')
     runs-on: ubuntu-latest
-    permissions:
-      issues: write
     steps:
-      - name: Resolve username
-        id: who
-        env:
-          BODY: ${{ github.event.issue.body }}
-          FALLBACK: ${{ github.event.issue.user.login }}
-        run: |
-          set -euo pipefail
-          # Try to extract an explicit username from the issue form input (if provided).
-          # Current issue form renders something like:
-          #   Your GitHub username
-          #   fanfeng123
-          # We scan for the heading line and take the first non-empty line after it.
-          username="$(printf '%s\n' "$BODY" | awk '
-            BEGIN { found = 0 }
-            /Your GitHub username/ || /你的 GitHub 用户名/ { found = 1; next }
-            found && NF { gsub(/^[ \t]+/, \"\", $0); gsub(/[ \t]+$/, \"\", $0); print $0; exit }
-          ' || true)"
-          if [ -z "$username" ]; then
-            username="$FALLBACK"
-          fi
-          echo "username=$username" >> "$GITHUB_OUTPUT"
-
-      - name: Invite to organization
-        id: invite
-        env:
-          GH_TOKEN: ${{ secrets.ORG_INVITE_TOKEN }}
-          ORG: ${{ github.repository_owner }}
-          USERNAME: ${{ steps.who.outputs.username }}
-        run: |
-          set -euo pipefail
-          if [ -z "${GH_TOKEN:-}" ]; then
-            echo "Missing required secret ORG_INVITE_TOKEN (must have admin:org scope)" >&2
-            exit 1
-          fi
-          echo "Inviting @$USERNAME to $ORG ..."
-          # Fetch user id (for validation only)
-          uid=$(gh api -H "Accept: application/vnd.github+json" \
-                    "/users/$USERNAME" --jq '.id' 2>/dev/null || true)
-          if [ -z "$uid" ]; then
-            echo "Failed to resolve user @$USERNAME" >&2
-            echo "resolved_status=failed" >> "$GITHUB_OUTPUT"
-            echo "resolved_message=无法解析该用户名或用户不存在" >> "$GITHUB_OUTPUT"
-            exit 1
-          fi
-          # Create or update organization membership as direct member.
-          # This endpoint will send an invitation if the user is not yet a member.
-          set +e
-          out=$(gh api -X PUT -H "Accept: application/vnd.github+json" \
-                    "/orgs/$ORG/memberships/$USERNAME" \
-                    -f role=member 2>&1)
-          code=$?
-          set -e
-          echo "$out"
-          if [ $code -eq 0 ]; then
-            echo "invite_status=ok" >> "$GITHUB_OUTPUT"
-          else
-            # Common cases: already a member or already invited
-            if echo "$out" | grep -qiE 'already.*(member|exists|invited)'; then
-              echo "invite_status=already" >> "$GITHUB_OUTPUT"
-            else
-              echo "invite_status=failed" >> "$GITHUB_OUTPUT"
-              echo "invite_error<<EOF" >> "$GITHUB_OUTPUT"
-              echo "$out" >> "$GITHUB_OUTPUT"
-              echo "EOF" >> "$GITHUB_OUTPUT"
-              exit 1
-            fi
-          fi
-
-      - name: Comment result
-        uses: actions/github-script@v7
+      - name: Invite-on-label
+        uses: vj-abigo/invite-on-label@v1.4
         with:
-          script: |
-            const core = require('@actions/core');
-            const status = core.getInput('invite_status', { required: false }) || process.env.INVITE_STATUS;
-            const username = core.getInput('username', { required: false }) || process.env.USERNAME;
-            const body = (() => {
-              if (status === 'ok') {
-                return `✅ Invitation sent to @${username}. Please check your GitHub notifications or email, or visit https://github.com/settings/organizations to view and accept the invitation.`;
-              }
-              if (status === 'already') {
-                return `ℹ️ @${username} is already a member or has a pending invite.`;
-              }
-              return `❌ Invitation failed. An org admin should check ORG_INVITE_TOKEN permissions.`;
-            })();
-            await github.rest.issues.createComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number,
-              body,
-            });
+          organization: zhongmiao-org
+          label: github-invitation
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          comment: "✅ Invitation sent to join the ZhongMiao Org GitHub organization. Please check your email or visit https://github.com/settings/organizations to accept the invitation."
         env:
-          INVITE_STATUS: ${{ steps.invite.outputs.invite_status }}
-          USERNAME: ${{ steps.who.outputs.username }}
-
-      - name: Close issue on success
-        if: steps.invite.outputs.invite_status == 'ok' || steps.invite.outputs.invite_status == 'already'
-        uses: actions/github-script@v7
-        with:
-          script: |
-            await github.rest.issues.update({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number,
-              state: 'closed',
-            });
+          INVITE_TOKEN: ${{ secrets.ORG_INVITE_TOKEN }}
