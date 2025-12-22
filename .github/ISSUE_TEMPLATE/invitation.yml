@@ -23,7 +23,7 @@ body:
       label: Short introduction or motivation
       placeholder: Tell us a bit about yourself or what you’d like to work on.
     validations:
-      required: true
+      required: false
   - type: checkboxes
     id: coc
     attributes:
